@@ -118,7 +118,7 @@ $$L(\mathbf{x}, \boldsymbol{\lambda}) = f(\mathbf{x}) - \sum_{i=1}^{m} \lambda_i
 
 ## Part I — Numerical Integration (Chapter 3)
 
-**Goal:** approximate $\displaystyle \int_a^b f(x) \, dx$.
+**Goal:** approximate $\displaystyle \int_a^b f(x) dx$.
 
 Most classical rules are **Newton–Cotes**: replace $f$ by a polynomial interpolant on equally-spaced nodes, then integrate the polynomial exactly.
 
@@ -126,25 +126,25 @@ Most classical rules are **Newton–Cotes**: replace $f$ by a polynomial interpo
 
 **Midpoint rule.** One node at $m = (a+b)/2$. Approximate the area by a rectangle of height $f(m)$:
 
-$$\int_a^b f(x) \, dx \approx (b-a) f(m)$$
+$$\int_a^b f(x) dx \approx (b-a) f(m)$$
 
 Error: $\displaystyle -\frac{(b-a)^{3}}{24} f''(\xi)$ for some $\xi \in (a,b)$. Exact for polynomials of degree $\leq 1$.
 
 **Trapezium rule.** Two nodes at $a, b$. Approximate the area by a trapezoid:
 
-$$\int_a^b f(x) \, dx \approx \frac{b-a}{2}\bigl(f(a) + f(b)\bigr)$$
+$$\int_a^b f(x) dx \approx \frac{b-a}{2}\bigl(f(a) + f(b)\bigr)$$
 
 Error: $\displaystyle \frac{(b-a)^{3}}{12} f''(\xi)$. Exact for polynomials of degree $\leq 1$.
 
 **Simpson's rule.** Three nodes at $a, m, b$. Fit a quadratic through the three points and integrate it exactly:
 
-$$\int_a^b f(x) \, dx \approx \frac{b-a}{6}\bigl(f(a) + 4f(m) + f(b)\bigr)$$
+$$\int_a^b f(x) dx \approx \frac{b-a}{6}\bigl(f(a) + 4f(m) + f(b)\bigr)$$
 
 Error: $\displaystyle -\frac{(b-a)^{5}}{2880} f^{(4)}(\xi)$. Exact for polynomials of degree $\leq 3$ (one degree better than the expected $\leq 2$, thanks to the symmetry of the nodes — the cubic error term vanishes).
 
 **Boole's rule.** Five equally-spaced nodes $f_0, f_1, f_2, f_3, f_4$:
 
-$$\int_a^b f(x) \, dx \approx \frac{b-a}{90}\bigl(7 f_0 + 32 f_1 + 12 f_2 + 32 f_3 + 7 f_4\bigr)$$
+$$\int_a^b f(x) dx \approx \frac{b-a}{90}\bigl(7 f_0 + 32 f_1 + 12 f_2 + 32 f_3 + 7 f_4\bigr)$$
 
 Error: $O\bigl((b-a)^{7} f^{(6)}\bigr)$. Exact for polynomials of degree $\leq 5$.
 
@@ -154,19 +154,19 @@ Sum the single-strip rule over $n$ sub-intervals $[x_{i-1}, x_i]$. The error imp
 
 **Composite midpoint:**
 
-$$\int_a^b f(x) \, dx \approx h\sum_{i=1}^{n} f(m_i), \qquad \lvert E \rvert \leq \frac{(b-a)^{3}}{24 n^{2}} \max_{x \in [a,b]} \lvert f''(x) \rvert$$
+$$\int_a^b f(x) dx \approx h\sum_{i=1}^{n} f(m_i), \qquad \lvert E \rvert \leq \frac{(b-a)^{3}}{24 n^{2}} \max_{x \in [a,b]} \lvert f''(x) \rvert$$
 
 where $m_i$ is the midpoint of the $i$-th sub-interval.
 
 **Composite trapezium:**
 
-$$\int_a^b f(x) \, dx \approx h\left(\tfrac{1}{2}f(a) + \sum_{i=1}^{n-1} f(x_i) + \tfrac{1}{2}f(b)\right), \qquad \lvert E \rvert \leq \frac{(b-a)^{3}}{12 n^{2}} \max \lvert f'' \rvert$$
+$$\int_a^b f(x) dx \approx h\left(\tfrac{1}{2}f(a) + \sum_{i=1}^{n-1} f(x_i) + \tfrac{1}{2}f(b)\right), \qquad \lvert E \rvert \leq \frac{(b-a)^{3}}{12 n^{2}} \max \lvert f'' \rvert$$
 
 Note the endpoints are weighted by $1/2$. Interior nodes shared between adjacent strips are counted once.
 
 **Composite Simpson's** (requires $n$ even, i.e. an even number of strips):
 
-$$\int_a^b f(x) \, dx \approx \frac{h}{3}\left( f_0 + 4(f_1 + f_3 + \cdots + f_{n-1}) + 2(f_2 + f_4 + \cdots + f_{n-2}) + f_n \right)$$
+$$\int_a^b f(x) dx \approx \frac{h}{3}\left( f_0 + 4(f_1 + f_3 + \cdots + f_{n-1}) + 2(f_2 + f_4 + \cdots + f_{n-2}) + f_n \right)$$
 
 $$\lvert E \rvert \leq \frac{(b-a)^{5}}{180 n^{4}} \max \lvert f^{(4)} \rvert$$
 
@@ -204,11 +204,11 @@ Draw $X_1, \ldots, X_N$ i.i.d. uniformly on region $R \subset \mathbb{R}^{d}$ wi
 
 $$\mathrm{MC}\_{N} = A(R) \cdot \frac{1}{N} \sum_{i=1}^{N} f(X_i)$$
 
-This works because $\mathbb{E}[f(X)] = \frac{1}{A(R)}\int_{R} f \, d\mathbf{x}$, so multiplying by $A(R)$ recovers the integral.
+This works because $\mathbb{E}[f(X)] = \frac{1}{A(R)}\int_{R} f d\mathbf{x}$, so multiplying by $A(R)$ recovers the integral.
 
 **Unbiased:**
 
-$$\mathbb{E}[\mathrm{MC}\_{N}] = \int_{R} f \, d\mathbf{x}$$
+$$\mathbb{E}[\mathrm{MC}\_{N}] = \int_{R} f d\mathbf{x}$$
 
 **Variance:**
 
@@ -232,7 +232,7 @@ These techniques reduce the variance $\mathrm{Var}(f(X))$, making MC converge fa
 
 - **Stratified sampling**: partition $R$ into sub-regions, sample independently inside each. By sampling each sub-region separately, you eliminate the between-region component of variance. Variance is never worse than plain MC.
 - **Importance sampling**: instead of sampling uniformly, draw from a density $p(\mathbf{x})$ chosen to be roughly proportional to $\lvert f(\mathbf{x})\rvert$. Weight each sample by $f(X)/p(X)$ to keep the estimator unbiased. Huge gains when $p$ closely matches the shape of $\lvert f \rvert$.
-- **Control variates**: find a function $\tilde{f}$ whose integral is known analytically. Estimate $\int (f - \tilde{f}) \, d\mathbf{x}$ by MC and add the known $\int \tilde{f} \, d\mathbf{x}$. This works well when $f - \tilde{f}$ has much smaller variance than $f$ alone.
+- **Control variates**: find a function $\tilde{f}$ whose integral is known analytically. Estimate $\int (f - \tilde{f}) d\mathbf{x}$ by MC and add the known $\int \tilde{f} d\mathbf{x}$. This works well when $f - \tilde{f}$ has much smaller variance than $f$ alone.
 
 ### When to Use Monte Carlo
 
