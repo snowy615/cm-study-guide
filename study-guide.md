@@ -28,15 +28,15 @@ Taylor's theorem approximates a function near a point using its derivatives. The
 
 **1D, order $n$ (Lagrange remainder):**
 
-$$f(x+h) = \sum_{k=0}^{n} \frac{h^{k}}{k!} f^{(k)}(x) + \frac{h^{n+1}}{(n+1)!} f^{(n+1)}(\xi)$$
+$$f(x) = f(a) + f'(a)(x-a) + \frac{f''(a)}{2!}(x-a)^2 + \dots + \frac{f^{(n)}(a)}{n!}(x-a)^n + \frac{f^{(n+1)}(\xi)}{(n+1)!}(x-a)^{n+1}$$
 
-for some $\xi$ between $x$ and $x+h$. The last term is the remainder — it is **exact**, not an approximation, but $\xi$ is unknown.
+for some $\xi$ between $a$ and $x$. The last term is the **Lagrange remainder** — it is **exact**, not an approximation, but $\xi$ is unknown.
 
-**nD, second order:**
+**nD, second order (with error term):**
 
-$$f(\mathbf{x}+\mathbf{h}) = f(\mathbf{x}) + \mathbf{h}^{T}\nabla f(\mathbf{x}) + \tfrac{1}{2} \mathbf{h}^{T} H(f)(\mathbf{x}+\theta\mathbf{h}) \mathbf{h}$$
+$$f(\mathbf{x}) \approx f(\mathbf{a}) + \nabla f(\mathbf{a})^T (\mathbf{x} - \mathbf{a}) + \frac{1}{2} (\mathbf{x} - \mathbf{a})^T \mathbf{H}_f(\mathbf{a}) (\mathbf{x} - \mathbf{a}) + O(\lVert \mathbf{x} - \mathbf{a} \rVert^3)$$
 
-for some $\theta \in (0,1)$. The three terms represent: the function value, the linear (gradient) correction, and the quadratic (curvature) correction. This expansion is fundamental to deriving Newton's method and analysing convergence.
+The three main terms represent: the function value at $\mathbf{a}$, the linear (gradient) correction, and the quadratic (curvature) correction via the Hessian $\mathbf{H}_f(\mathbf{a})$. The error is $O(\lVert \mathbf{x} - \mathbf{a} \rVert^3)$, i.e. cubic in the displacement. This expansion is fundamental to deriving Newton's method and analysing convergence.
 
 ### Convexity
 
