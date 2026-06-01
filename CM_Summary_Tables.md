@@ -28,8 +28,8 @@
 | **Requires bracket?** | Yes | No | No | No | No | Yes |
 | **Derivatives needed** | None | $f'$ | None | $f'$ and $f''$ | None | None |
 | **Convergence order** | Linear $q=1$ | Quadratic $q=2$ | Superlinear $q \approx 1.618$ | Cubic $q=3$ | $q \approx 1.839$ | $q \geq 1$ (typically $\approx 1.839$) |
-| **Convergence constant** | Rate $= \frac{1}{2}$ always | $C = \frac{|f''(x^*)|}{2|f'(x^*)|}$ | — | — | — | — |
-| **Error bound** | $|\epsilon_n| \leq \frac{b_0 - a_0}{2^{n+1}}$ | $|\epsilon_{n+1}| \approx C|\epsilon_n|^2$ (Lemma 5.3) | — | — | — | Worst case same as bisection |
+| **Convergence constant** | Rate $= \frac{1}{2}$ always | $C = \frac{ \vert f''(x^*) \vert }{2 \vert f'(x^*) \vert }$ | — | — | — | — |
+| **Error bound** | $ \vert \epsilon_n \vert  \leq \frac{b_0 - a_0}{2^{n+1}}$ | $ \vert \epsilon_{n+1} \vert  \approx C \vert \epsilon_n \vert ^2$ (Lemma 5.3) | — | — | — | Worst case same as bisection |
 | **Cost per step** | 1 $f$ eval | 1 $f$ + 1 $f'$ | 1 $f$ (cache previous) | 1 $f$ + 1 $f'$ + 1 $f''$ | 1 $f$ (cache 2 previous) | 1 $f$ |
 | **Conditions for convergence** | $f$ continuous; $f(a)f(b)<0$ | $f'(x^*)\neq 0$ (simple root); $f''$ continuous near $x^*$; $x_0$ sufficiently close | $f$ smooth; $x_0, x_1$ close to $x^*$; $f(x_0)\neq f(x_1)$ | $f'(x^*)\neq 0$; $f, f', f''$ available near $x^*$ | $f$ smooth; 3 starting points with distinct $f$-values | $f(a)f(b)<0$; $f$ continuous |
 | **Limitations** | Slow (1 binary digit/step); must have bracket | Diverges if $f'(x_n)\approx 0$; fails at multiple roots (degrades to linear); no bracket | Catastrophic cancellation near root; no bracket guarantee | Needs $f''$; expensive per step; can diverge | IQI fails if two $f$-values equal; Muller can produce complex iterates | Switching logic opaque |
@@ -74,7 +74,7 @@ Error bound after step $n$: $|\epsilon_n| \leq 1/2^{n+1}$. After 10 steps: error
 
 $$x_{n+1} = x_n - \frac{x_n^2 - 2}{2x_n} = \frac{x_n}{2} + \frac{1}{x_n}$$
 
-| $n$ | $x_n$ | $f(x_n)$ | $x_{n+1} = x_n - f/f'$ | $|\epsilon_n| = |x_n - \sqrt{2}|$ |
+| $n$ | $x_n$ | $f(x_n)$ | $x_{n+1} = x_n - f/f'$ | $ \vert \epsilon_n \vert  =  \vert x_n - \sqrt{2} \vert $ |
 |----|-------|---------|----------------------|----------------------------------|
 | 0 | 1.0000 | $-1.0000$ | 1.5000 | 0.4142 |
 | 1 | 1.5000 | $+0.2500$ | 1.4167 | 0.0858 |
@@ -125,7 +125,7 @@ Fit $x = A f^2 + Bf + C$ (quadratic in $f$), evaluate at $f=0$ using Lagrange fo
 
 $$x_3 = x_0\frac{(0-f_1)(0-f_2)}{(f_0-f_1)(f_0-f_2)} + x_1\frac{(0-f_0)(0-f_2)}{(f_1-f_0)(f_1-f_2)} + x_2\frac{(0-f_0)(0-f_1)}{(f_2-f_0)(f_2-f_1)}$$
 
-$$= 0\cdot\frac{(1)(−2)}{(−1)(−4)} + 1\cdot\frac{(2)(−2)}{(1)(−3)} + 2\cdot\frac{(2)(1)}{(4)(3)} = 0 + \frac{-4}{-3} + \frac{4}{12} = \frac{4}{3} + \frac{1}{3} = \frac{5}{3} \approx 1.667$$
+$$= 0\cdot\frac{(1)(-2)}{(-1)(-4)} + 1\cdot\frac{(2)(-2)}{(1)(-3)} + 2\cdot\frac{(2)(1)}{(4)(3)} = 0 + \frac{-4}{-3} + \frac{4}{12} = \frac{4}{3} + \frac{1}{3} = \frac{5}{3} \approx 1.667$$
 
 **Pitfall:** if $f_0 = f_1$ (or any two $f$-values equal), the denominator vanishes — IQI undefined.
 
@@ -156,7 +156,7 @@ $$= 0\cdot\frac{(1)(−2)}{(−1)(−4)} + 1\cdot\frac{(2)(−2)}{(1)(−3)} + 2
 | Property | **Newton's Method ($n$D)** | **Broyden's Method (Quasi-Newton)** |
 |---|---|---|
 | **Step formula** | Solve $J(\mathbf{x}_n)\,\Delta\mathbf{x} = -\mathbf{f}(\mathbf{x}_n)$; then $\mathbf{x}_{n+1} = \mathbf{x}_n + \Delta\mathbf{x}$ | Solve $\hat{J}_n\,\Delta\mathbf{x} = -\mathbf{f}(\mathbf{x}_n)$; then $\mathbf{x}_{n+1} = \mathbf{x}_n + \Delta\mathbf{x}$ |
-| **Jacobian update** | Recompute full $J(\mathbf{x}_n)$ at every step ($d^2$ partial derivatives) | Rank-1 update: $\hat{J}_n = \hat{J}_{n-1} + \dfrac{(\Delta\mathbf{f} - \hat{J}_{n-1}\Delta\mathbf{x})\,\Delta\mathbf{x}^T}{\|\Delta\mathbf{x}\|^2}$ |
+| **Jacobian update** | Recompute full $J(\mathbf{x}_n)$ at every step ($d^2$ partial derivatives) | Rank-1 update: $\hat{J}_n = \hat{J}_{n-1} + \dfrac{(\Delta\mathbf{f} - \hat{J}_{n-1}\Delta\mathbf{x})\,\Delta\mathbf{x}^T}{ \Vert \Delta\mathbf{x} \Vert ^2}$ |
 | **Initialisation** | Exact Jacobian $J(\mathbf{x}_0)$ | $\hat{J}_0 = I$ (identity); first step is then $-\mathbf{f}(\mathbf{x}_0)$ |
 | **Cost per step** | $O(d^2)$ partial derivatives + $O(d^3)$ LU solve | $O(d^2)$ rank-1 update + $O(d^2)$ Sherman–Morrison inverse update (avoids $O(d^3)$ solve) |
 | **Convergence** | Quadratic (near $\mathbf{x}^*$ if $J(\mathbf{x}^*)$ nonsingular, $\mathbf{x}_0$ close) | Superlinear (not quadratic); curvature accumulates over iterations |
@@ -332,11 +332,11 @@ $$f(\mathbf{x}_n + \alpha\,\mathbf{d}_n) < f(\mathbf{x}_n) + \sigma\alpha\,\math
 
 | Property | **Coordinate Descent** | **Gradient (Steepest) Descent** | **Newton's ($n$D)** | **BFGS** | **SGD / Minibatch** |
 |---|---|---|---|---|---|
-| **Direction formula** | $\mathbf{d}_n = \pm\mathbf{e}_i$ (cycle through coordinate axes) | $\mathbf{d}_n = -\mathbf{g}_n$ | Solve $H(\mathbf{x}_n)\mathbf{d}_n = -\mathbf{g}_n$ | $\mathbf{d}_n = -\hat{H}_n^{-1}\mathbf{g}_n$ | $\mathbf{d}_n = -\frac{1}{|B|}\sum_{i\in B}\nabla l_i(\mathbf{x}_n)$ |
+| **Direction formula** | $\mathbf{d}_n = \pm\mathbf{e}_i$ (cycle through coordinate axes) | $\mathbf{d}_n = -\mathbf{g}_n$ | Solve $H(\mathbf{x}_n)\mathbf{d}_n = -\mathbf{g}_n$ | $\mathbf{d}_n = -\hat{H}_n^{-1}\mathbf{g}_n$ | $\mathbf{d}_n = -\frac{1}{ \vert B \vert }\sum_{i\in B}\nabla l_i(\mathbf{x}_n)$ |
 | **Hessian/approximation update** | N/A | N/A | Recompute exact $H(\mathbf{x}_n)$ each step | $\hat{H}_n = \hat{H}_{n-1} + \dfrac{\Delta\mathbf{g}\,\Delta\mathbf{g}^T}{\Delta\mathbf{g}^T\Delta\mathbf{x}} - \dfrac{\hat{H}_{n-1}\Delta\mathbf{x}\,\Delta\mathbf{x}^T\hat{H}_{n-1}}{\Delta\mathbf{x}^T\hat{H}_{n-1}\Delta\mathbf{x}}$ | N/A |
 | **Initial Hessian** | N/A | N/A | Exact $H(\mathbf{x}_0)$ | $\hat{H}_0 = I$ (first step = gradient descent) | N/A |
 | **Derivatives needed** | None | $\nabla f$ | $\nabla f$ and $H$ (full Hessian) | $\nabla f$ only | $\nabla l_i$ for sampled $i\in B$ |
-| **Cost per step** | $O(d)$ + 1D exact minimisation | $O(d)$ gradient + line search | $O(d^2)$ Hessian entries + $O(d^3)$ LU solve | $O(d^2)$ update via Sherman–Morrison–Woodbury | $O(d\cdot|B|)$ per step |
+| **Cost per step** | $O(d)$ + 1D exact minimisation | $O(d)$ gradient + line search | $O(d^2)$ Hessian entries + $O(d^3)$ LU solve | $O(d^2)$ update via Sherman–Morrison–Woodbury | $O(d\cdot \vert B \vert )$ per step |
 | **Convergence rate** | Slow (depends on problem structure) | Linear; rate $\approx \frac{\kappa-1}{\kappa+1}$ where $\kappa = \lambda_{\max}/\lambda_{\min}$ | Quadratic near min (when $H$ PD) | Superlinear; globally convergent (mild conditions + line search) | Sublinear in expectation; noisy |
 | **Conditions** | $f$ differentiable (or subdifferentiable) | $f$ differentiable; $\nabla f$ Lipschitz | $H(\mathbf{x}^*)$ positive definite; $\mathbf{x}_0$ close to $\mathbf{x}^*$ | Curvature condition: $\Delta\mathbf{x}^T\Delta\mathbf{g}>0$; $\hat{H}_0$ PD | $f = (1/N)\sum_i l_i$; each $\nabla l_i$ computable |
 | **Limitations** | Very slow for correlated variables; gets stuck on non-axis-aligned valleys | Zigzags in ill-conditioned (elongated) valleys; consecutive gradients orthogonal (with exact line search) | Fails if $H$ not PD (may race toward saddle/max); $O(d^3)$ expensive; fragile in non-convex regions | Curvature condition can fail for non-convex $f$ (fix: reset $\hat{H}=I$); less accurate than Newton | High variance; needs step-size schedule; not for high-precision problems |
@@ -488,7 +488,7 @@ Start $(0,0)^T$.
 | Property | **Composite Midpoint** | **Composite Trapezium** | **Composite Simpson's** ($n$ even) | **Monte Carlo** (nD) |
 |---|---|---|---|---|
 | **Formula** | $h\displaystyle\sum_{i=1}^{n}f(m_i)$ | $h\!\left[\tfrac{1}{2}f(a)+\displaystyle\sum_{i=1}^{n-1}f(x_i)+\tfrac{1}{2}f(b)\right]$ | $\dfrac{h}{3}\!\left[f_0 + 4(f_1+f_3+\cdots+f_{n-1}) + 2(f_2+\cdots+f_{n-2}) + f_n\right]$ | $A(R)\cdot\dfrac{1}{N}\displaystyle\sum_{i=1}^N f(X_i)$, $X_i\stackrel{\text{iid}}{\sim}\text{Uniform}(R)$ |
-| **Error bound** | $\dfrac{(b-a)^3}{24n^2}\max|f''|$ | $\dfrac{(b-a)^3}{12n^2}\max|f''|$ | $\dfrac{(b-a)^5}{180n^4}\max|f^{(4)}|$ | $O(N^{-1/2})$ **independent of dimension $d$** |
+| **Error bound** | $\dfrac{(b-a)^3}{24n^2}\max \vert f'' \vert $ | $\dfrac{(b-a)^3}{12n^2}\max \vert f'' \vert $ | $\dfrac{(b-a)^5}{180n^4}\max \vert f^{(4)} \vert $ | $O(N^{-1/2})$ **independent of dimension $d$** |
 | **Convergence rate** | $O(n^{-2})$ | $O(n^{-2})$ | $O(n^{-4})$ | $O(N^{-1/2})$ |
 | **$f$ evaluations** | $n$ (midpoints only) | $n+1$ (all boundary + interior) | $2n+1$ (all $x_0,\ldots,x_n$) | $N$ |
 | **Smoothness required** | $f\in C^2[a,b]$ | $f\in C^2[a,b]$ | $f\in C^4[a,b]$; **$n$ must be even** | $f$ integrable; no smoothness needed |
@@ -584,12 +584,12 @@ Error $\approx0.00006$. Highly accurate with just 5 evaluations.
 | Concept | Symbol/Formula | What it measures | Notes |
 |---------|---------------|-----------------|-------|
 | **Error** | $\tilde{u}-u$ | Signed difference: computed $-$ true | Can be positive or negative |
-| **Absolute error** | $|\tilde{u}-u|$ | Magnitude of error | For vectors: use $\|\tilde{\mathbf{u}}-\mathbf{u}\|$ (Euclidean norm) |
-| **Relative error** | $|\tilde{u}-u|/|u|$ | Error scaled by true value | Dimensionless; meaningful only if $u\neq0$ |
+| **Absolute error** | $ \vert \tilde{u}-u \vert $ | Magnitude of error | For vectors: use $ \Vert \tilde{\mathbf{u}}-\mathbf{u} \Vert $ (Euclidean norm) |
+| **Relative error** | $ \vert \tilde{u}-u \vert / \vert u \vert $ | Error scaled by true value | Dimensionless; meaningful only if $u\neq0$ |
 | **Forward error** | $\tilde{f}(x)-f(x)$ | How wrong is the **output**? | Direct measure of answer quality |
-| **Backward error** | $\min|\delta x|$ s.t. $\tilde{f}(x)=f(x+\delta x)$ | How wrong is the **input** that would give this output? | Small backward error $\Rightarrow$ computed answer is exact for a nearby input |
+| **Backward error** | $\min \vert \delta x \vert $ s.t. $\tilde{f}(x)=f(x+\delta x)$ | How wrong is the **input** that would give this output? | Small backward error $\Rightarrow$ computed answer is exact for a nearby input |
 | **Truncation error** | e.g. $O(h^p)$ in integration | Error from approximating an $\infty$-procedure by finite one | Inherent to the mathematical method; exists even with exact arithmetic |
-| **Roundoff error** | $\leq \varepsilon_{\text{mach}}\cdot|u|$ per operation | Error from finite floating-point representation | Inherent to hardware; not the same as truncation error |
+| **Roundoff error** | $\leq \varepsilon_{\text{mach}}\cdot \vert u \vert $ per operation | Error from finite floating-point representation | Inherent to hardware; not the same as truncation error |
 
 **Machine epsilon $\varepsilon_{\text{mach}}$:** Smallest $\varepsilon>0$ such that $1+\varepsilon \neq 1$ in floating point. Equivalently: maximum relative rounding error when storing a real number.
 
@@ -622,13 +622,13 @@ Let $\epsilon_n = x_n - x^*$ be the error at step $n$ of an iterative method. As
 
 | Type | Formal condition | Intuition | Digits gained per step | Example |
 |------|-----------------|-----------|----------------------|---------|
-| **Sublinear** | $|\epsilon_{n+1}|/|\epsilon_n|\to 1$ | Convergence slows down | $<1$ per step | Naive fixed-point near flat region |
+| **Sublinear** | $ \vert \epsilon_{n+1} \vert / \vert \epsilon_n \vert \to 1$ | Convergence slows down | $<1$ per step | Naive fixed-point near flat region |
 | **Logarithmic** | Sublinear + step ratios $\to1$ | Barely converging; extremely slow | $\approx0$ | Bisection in a pathological case |
-| **Linear** (order 1) | $|\epsilon_{n+1}|/|\epsilon_n|\to r$, $0<r<1$ | Error multiplied by constant $r<1$ each step | $-\log_{10}(r)$ per step (constant) | Bisection ($r=0.5$, $\approx 0.30$ digits/step); gradient descent |
-| **Superlinear** | $|\epsilon_{n+1}|/|\epsilon_n|\to0$ | Faster than any fixed linear rate | Grows with $n$ | Secant ($q\approx1.618$); BFGS |
-| **Order $q>1$** | $|\epsilon_{n+1}|/|\epsilon_n|^q\to C>0$ | Error raised to power $q$ each step | $\sim q^n\times$(initial digits) | General |
-| **Quadratic** ($q=2$) | $|\epsilon_{n+1}|/|\epsilon_n|^2\to C$ | Correct digits **double** each step | Doubles | Newton's (root-finding + optimisation) |
-| **Cubic** ($q=3$) | $|\epsilon_{n+1}|/|\epsilon_n|^3\to C$ | Correct digits **triple** each step | Triples | Halley's method |
+| **Linear** (order 1) | $ \vert \epsilon_{n+1} \vert / \vert \epsilon_n \vert \to r$, $0<r<1$ | Error multiplied by constant $r<1$ each step | $-\log_{10}(r)$ per step (constant) | Bisection ($r=0.5$, $\approx 0.30$ digits/step); gradient descent |
+| **Superlinear** | $ \vert \epsilon_{n+1} \vert / \vert \epsilon_n \vert \to0$ | Faster than any fixed linear rate | Grows with $n$ | Secant ($q\approx1.618$); BFGS |
+| **Order $q>1$** | $ \vert \epsilon_{n+1} \vert / \vert \epsilon_n \vert ^q\to C>0$ | Error raised to power $q$ each step | $\sim q^n\times$(initial digits) | General |
+| **Quadratic** ($q=2$) | $ \vert \epsilon_{n+1} \vert / \vert \epsilon_n \vert ^2\to C$ | Correct digits **double** each step | Doubles | Newton's (root-finding + optimisation) |
+| **Cubic** ($q=3$) | $ \vert \epsilon_{n+1} \vert / \vert \epsilon_n \vert ^3\to C$ | Correct digits **triple** each step | Triples | Halley's method |
 
 **Lemma 4.2 (required):** If $A_n$ converges with order $q$, then $A_{2n}$ (every other term) converges with order $q^2$.
 
@@ -642,7 +642,7 @@ Let $\epsilon_n = x_n - x^*$ be the error at step $n$ of an iterative method. As
 
 Near a minimum, $f(\mathbf{x})-f(\mathbf{x}^*)\approx\tfrac{1}{2}\|\mathbf{x}-\mathbf{x}^*\|^2_H$ (quadratic behaviour). A perturbation $\delta$ in $\mathbf{x}$ causes $\sim\delta^2$ change in $f$. When $\delta^2\sim\varepsilon_{\text{mach}}$, the values $f(\mathbf{x})$ and $f(\mathbf{x}^*)$ are **indistinguishable in floating point**:
 
-| Setting | Achievable tolerance $\|\mathbf{x}-\mathbf{x}^*\|/\|\mathbf{x}^*\|$ | Reason |
+| Setting | Achievable tolerance $ \Vert \mathbf{x}-\mathbf{x}^* \Vert / \Vert \mathbf{x}^* \Vert $ | Reason |
 |---------|----------------------------------------------------------------------|--------|
 | **Root-finding** | $O(\varepsilon_{\text{mach}})\approx10^{-16}$ | $f$ is approx. linear near root: perturbation $\delta$ in $x$ gives $\sim f'(x^*)\delta$ in $f$ — both are representable |
 | **Optimisation** | $O(\sqrt{\varepsilon_{\text{mach}}})\approx10^{-8}$ | $f$ is approx. quadratic near min: perturbation $\delta$ in $x$ gives $\sim\delta^2$ in $f$ — distinguishable only when $\delta\gtrsim\sqrt{\varepsilon}$ |
@@ -684,7 +684,7 @@ This is the size of the next Newton step. It is exact when $f$ is linear; reliab
 | | **Root-Finding** | **Optimisation** |
 |---|---|---|
 | Solving | $\mathbf{f}(\mathbf{x})=\mathbf{0}$ | $\nabla f(\mathbf{x})=\mathbf{0}$ |
-| "Better" iterate | Smaller residual $\|\mathbf{f}(\mathbf{x}_n)\|$ (not always monotone) | Smaller value $f(\mathbf{x}_n)$ — can always enforce with Armijo |
+| "Better" iterate | Smaller residual $ \Vert \mathbf{f}(\mathbf{x}_n) \Vert $ (not always monotone) | Smaller value $f(\mathbf{x}_n)$ — can always enforce with Armijo |
 | Best achievable tol | $O(\varepsilon_{\text{mach}})\approx10^{-16}$ | $O(\sqrt{\varepsilon_{\text{mach}}})\approx10^{-8}$ |
 | Newton variant | $x_{n+1}=x_n-f/f'$; quadratic near simple root; fails if $J$ singular | $\mathbf{d}=-H^{-1}\mathbf{g}$; quadratic near min with PD Hessian; fails if $H$ not PD |
 | Second-order structure | **Jacobian** $J$ (generally non-symmetric) | **Hessian** $H$ (always symmetric) |
